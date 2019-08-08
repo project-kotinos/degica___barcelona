@@ -1,0 +1,17 @@
+build_targets:
+- commands:
+  - chmod +x yourbased.sh
+  - sh ./yourbased.sh
+  container:
+    image: yourbase/yb_ubuntu:16.04
+  name: default
+  environment:
+  - DATABASE_URL=postgres://postgres:@localhost:5432/travis_ci_test
+  - ENCRYPTION_KEY=abcdefghijklmn
+ci:
+  builds:
+  - build_target: default
+    name: default
+dependencies:
+  build:
+  - ruby:2.5.3
