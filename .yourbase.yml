@@ -6,8 +6,22 @@ build_targets:
     image: yourbase/yb_ubuntu:16.04.1
   name: default
   environment:
-  - DATABASE_URL=postgres://postgres:@localhost:5432/travis_ci_test
-  - ENCRYPTION_KEY=abcdefghijklmn
+      - PGUSER=ci
+      - PGPASSWORD=ci
+      - PGHOST={{ .Containers.IP "db" }}
+      - ENCRYPTION_KEY=abcdefghijklmn
+      - DATABASE_URL=postgres://ci:ci@{{ .Containers.IP "db" }}:5432/travis_ci_test
+  dependencies:
+      containers:
+        db:
+          image: postgres:9.4
+          environment:
+            - POSTGRES_PASSWORD=ci
+            - POSTGRES_USER=ci
+            - POSTGRES_DB=travis_ci_test
+          port_check:
+            port: 5432
+            timeout: 45
 ci:
   builds:
   - build_target: default
